@@ -1,11 +1,8 @@
 {
   "homepage": "http://voooodoo.github.io/react-airport",
-  "name": "react_task-boilerplate-ci",
+  "name": "react-airport",
   "version": "0.1.0",
   "private": true,
-  "keywords": [],
-  "author": "Mate Academy",
-  "license": "GPL-3.0",
   "dependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
