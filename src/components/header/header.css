@@ -1,0 +1,17 @@
+.header {
+  background-color: #1eb7ee;
+  width: 100%;
+  padding: 20px 50px;
+}
+
+.logo {
+  color: #fff;
+  font-size: 18px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
