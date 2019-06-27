@@ -5,7 +5,6 @@ class ApiService {
   getData = date => {
     return fetch(`${this._baseUrl}${date}`)
       .then(response => response.json())
-      .then(data => data)
   }
 
 }
