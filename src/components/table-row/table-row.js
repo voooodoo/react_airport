@@ -1,13 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 const TableRow = (props) => {
   const {
     row: {
       term,
       gateNo,
-      ['airportFromID.city_en'] : from,
-      ['airportToID.city_en']: to,
+      'airportFromID.city_en' : from,
+      'airportToID.city_en': to,
       airline: { en: { name: airline } },
       fltNo,
       status,
@@ -32,25 +31,3 @@ const TableRow = (props) => {
 };
 
 export default TableRow;
-
-TableRow.defaultProps = {
-  row: {
-    term: null,
-    gateNo: null,
-    destination: null,
-    airline: null,
-    fltNo: null,
-    status: null,
-  },
-};
-
-TableRow.propTypes = {
-  row: PropTypes.shape({
-    term: PropTypes.string,
-    gateNo: PropTypes.string,
-    destination: PropTypes.string,
-    airline: PropTypes.object,
-    fltNo: PropTypes.string,
-    status: PropTypes.string,
-  }),
-};

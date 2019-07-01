@@ -1,8 +1,7 @@
 import React from 'react';
 import './header.css';
 
-const Header = (props) => {
-  const {toogleTab} = props;
+const Header = ({ toogleTab }) => {
   return (
     <header className="header">
       <div className="container">

@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import TableRow from '../table-row';
 
-const Table = (props) => {
-  const { data } = props;
+const Table = ({ data }) => {
   return (
     <table className="table">
       <thead>
@@ -29,11 +27,3 @@ const Table = (props) => {
 };
 
 export default Table;
-
-Table.defaultProps = {
-  data: [],
-};
-
-Table.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
-};

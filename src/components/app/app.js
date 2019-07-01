@@ -9,40 +9,43 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.apiService = new ApiService();
     this.state = {
       tab: 'arrivals',
       arrival: [],
       departure: [],
     };
+  }
 
-    this.toogleTab = (newTab) => {
-      const { tab } = this.state;
-      if (newTab !== tab) {
-        this.setState({ tab: newTab });
-      }
-    };
+  toogleTab = (newTab) => {
+    const { tab } = this.state;
+    if (newTab !== tab) {
+      this.setState({ tab: newTab });
+    }
+  };
+
+  setData(arrival, departure, tab) {
+    if (tab === 'arrivals') {
+      return arrival;
+    } else {
+      return departure;
+    }
   }
 
   componentDidMount() {
     const now = new Date();
     const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
-    this.apiService.getData(date)
+    ApiService.getData(date)
       .then((data) => {
-        const { arrival, departure } = data.body;
+        const { arrival, departure } = data;
         this.setState({ arrival, departure });
       });
   }
 
   render() {
     const { arrival, departure, tab } = this.state;
-    let data;
-    if (tab === 'arrivals') {
-      data = arrival;
-    } else {
-      data = departure;
-    }
+    const data = this.setData(arrival, departure, tab);
+
     return (
       <>
         <Header toogleTab={this.toogleTab} />
