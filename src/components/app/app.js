@@ -58,13 +58,13 @@ class App extends Component {
       [SORT_ORDER_TERMINAL]: (a, b) => a.term.localeCompare(b.term),
       [SORT_ORDER_TIME]: (a, b) => new Date(a.actual) - new Date(b.actual),
       [SORT_ORDER_DESTINATION]: (a, b) => {
-        let destA = a['airportFromID.city_en'] || a['airportToID.city_en'];
-        let destB = b['airportFromID.city_en'] || b['airportToID.city_en'];
+        const destA = a['airportFromID.city_en'] || a['airportToID.city_en'];
+        const destB = b['airportFromID.city_en'] || b['airportToID.city_en'];
         return destA.localeCompare(destB);
       },
       [SORT_ORDER_AIRLINE]: (a, b) => {
-        let airlineA = a.airline.en.name;
-        let airlineB = b.airline.en.name;
+        const airlineA = a.airline.en.name;
+        const airlineB = b.airline.en.name;
         return airlineA.localeCompare(airlineB);
       },
       [SORT_ORDER_FLIGHT]: (a, b) => a.fltNo - b.fltNo,
