@@ -22,6 +22,7 @@ class App extends Component {
     date: this.getDate(),
     day: DAY_TODAY,
     sortField: null,
+    isLoading: false,
   };
 
   toogleTab = newTab => {
@@ -81,9 +82,10 @@ class App extends Component {
   }
 
   fetch() {
+    this.setState({ isLoading: true });
     ApiService.getData(this.state.date).then(data => {
       const { arrival, departure } = data;
-      this.setState({ arrival, departure });
+      this.setState({ arrival, departure, isLoading: false });
     });
   }
 
@@ -92,16 +94,23 @@ class App extends Component {
   }
 
   render() {
-    const { arrival, departure, tab, date, day, sortField } = this.state;
+    const { arrival, departure, tab, date, day, sortField, isLoading } = this.state;
     let data = tab === ARRIVALS ? arrival : departure;
 
     if (sortField) {
       data = this.sortData(data, sortField);
     }
 
+    const content = isLoading ? (
+      <div class="spinner spinner-border text-primary"></div>
+    ) : (
+      <Table data={data} setrSortField={this.setrSortField} />
+    );
+
     return (
       <>
         <Header toogleTab={this.toogleTab} toogleDay={this.toogleDay} />
+
         <div className="container">
           <div className="row">
             <div className="col-12">
@@ -111,7 +120,7 @@ class App extends Component {
                   <small>{day}: &nbsp;</small>
                   <small>{date}</small>
                 </h2>
-                <Table data={data} setrSortField={this.setrSortField} />
+                {content}
               </main>
             </div>
           </div>
