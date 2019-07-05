@@ -1,26 +1,46 @@
 import React from 'react';
 import TableRow from '../table-row';
+import {
+  SORT_ORDER_TERMINAL,
+  SORT_ORDER_TIME,
+  SORT_ORDER_DESTINATION,
+  SORT_ORDER_AIRLINE,
+  SORT_ORDER_FLIGHT,
+  SORT_ORDER_STATUS,
+} from '../../helpers/filter-constants';
 
-const Table = ({ data }) => {
+import './table.css';
+
+const Table = ({ data, setrSortField }) => {
   return (
     <table className="table">
       <thead>
         <tr>
-          <th scope="col">Terminal</th>
+          <th scope="col" onClick={() => setrSortField(SORT_ORDER_TERMINAL)}>
+            Terminal
+          </th>
           <th scope="col">Gate</th>
-          <th scope="col">Time</th>
-          <th scope="col">Destination</th>
-          <th scope="col">Airline</th>
-          <th scope="col">Flight #</th>
-          <th scope="col">Status</th>
+          <th scope="col" onClick={() => setrSortField(SORT_ORDER_TIME)}>
+            Time
+          </th>
+          <th scope="col" onClick={() => setrSortField(SORT_ORDER_DESTINATION)}>
+            Destination
+          </th>
+          <th scope="col" onClick={() => setrSortField(SORT_ORDER_AIRLINE)}>
+            Airline
+          </th>
+          <th scope="col" onClick={() => setrSortField(SORT_ORDER_FLIGHT)}>
+            Flight #
+          </th>
+          <th scope="col" onClick={() => setrSortField(SORT_ORDER_STATUS)}>
+            Status
+          </th>
         </tr>
       </thead>
       <tbody>
-        {
-          data.map(
-            row => (<TableRow row={row} key={row.ID} />)
-          )
-        }
+        {data.map(row => (
+          <TableRow row={row} key={row.ID} />
+        ))}
       </tbody>
     </table>
   );

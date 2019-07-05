@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import Header from '../header';
 import Table from '../table';
 import ApiService from '../../services/api/api-service';
-import { ARRIVALS, DEPARTURES, DAY_YESTERDAY, DAY_TODAY, DAY_TOMORROV } from '../../helpers/constants';
+import { ARRIVALS, DAY_YESTERDAY, DAY_TODAY, DAY_TOMORROV } from '../../helpers/constants';
+import {
+  SORT_ORDER_TERMINAL,
+  SORT_ORDER_TIME,
+  SORT_ORDER_DESTINATION,
+  SORT_ORDER_AIRLINE,
+  SORT_ORDER_FLIGHT,
+  SORT_ORDER_STATUS,
+} from '../../helpers/filter-constants';
 
 import './app.css';
 
@@ -13,11 +21,12 @@ class App extends Component {
     departure: [],
     date: this.getDate(),
     day: DAY_TODAY,
+    sortField: null,
   };
 
   toogleTab = newTab => {
     if (newTab !== this.state.tab) {
-      this.setState({ tab: newTab });
+      this.setState({ tab: newTab, sortField: null });
     }
   };
 
@@ -34,20 +43,37 @@ class App extends Component {
           break;
       }
 
-      this.setState({ date: this.getDate(date), day: newDay }, () => this.fetch());
+      this.setState({ date: this.getDate(date), day: newDay, sortField: null }, () => this.fetch());
     }
   };
 
-  setData(arrival, departure, tab) {
-    switch (tab) {
-      case ARRIVALS:
-        return arrival;
-      case DEPARTURES:
-        return departure;
-
-      default:
-        return arrival;
+  setrSortField = sortField => {
+    if (this.state.sortField !== sortField) {
+      this.setState({ sortField });
     }
+  };
+
+  sortData(data, sortField) {
+    const callbackMap = {
+      [SORT_ORDER_TERMINAL]: (a, b) => a.term.localeCompare(b.term),
+      [SORT_ORDER_TIME]: (a, b) => new Date(a.actual) - new Date(b.actual),
+      [SORT_ORDER_DESTINATION]: (a, b) => {
+        let destA = a['airportFromID.city_en'] || a['airportToID.city_en'];
+        let destB = b['airportFromID.city_en'] || b['airportToID.city_en'];
+        return destA.localeCompare(destB);
+      },
+      [SORT_ORDER_AIRLINE]: (a, b) => {
+        let airlineA = a.airline.en.name;
+        let airlineB = b.airline.en.name;
+        return airlineA.localeCompare(airlineB);
+      },
+      [SORT_ORDER_FLIGHT]: (a, b) => a.fltNo - b.fltNo,
+      [SORT_ORDER_STATUS]: (a, b) => a.status.localeCompare(b.status),
+    };
+
+    const callback = callbackMap[sortField];
+
+    return data.sort(callback);
   }
 
   getDate(date = new Date()) {
@@ -66,8 +92,12 @@ class App extends Component {
   }
 
   render() {
-    const { arrival, departure, tab, date, day } = this.state;
-    const data = this.setData(arrival, departure, tab);
+    const { arrival, departure, tab, date, day, sortField } = this.state;
+    let data = tab === ARRIVALS ? arrival : departure;
+
+    if (sortField) {
+      data = this.sortData(data, sortField);
+    }
 
     return (
       <>
@@ -81,7 +111,7 @@ class App extends Component {
                   <small>{day}: &nbsp;</small>
                   <small>{date}</small>
                 </h2>
-                <Table data={data} />
+                <Table data={data} setrSortField={this.setrSortField} />
               </main>
             </div>
           </div>
