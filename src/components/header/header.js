@@ -1,7 +1,8 @@
 import React from 'react';
+import Nav from '../nav';
 import './header.css';
 
-const Header = ({ toogleTab }) => {
+const Header = props => {
   return (
     <header className="header">
       <div className="container">
@@ -12,26 +13,7 @@ const Header = ({ toogleTab }) => {
                 <span className="logo">Airport</span>
               </li>
             </ul>
-            <ul className="nav nav-tabs">
-              <li className="nav-item">
-                <button
-                  type="button"
-                  className="btn nav-link"
-                  onClick={() => toogleTab('arrivals')}
-                >
-                  Arrivals
-                </button>
-              </li>
-              <li className="nav-item">
-                <button
-                  type="button"
-                  className="btn nav-link"
-                  onClick={() => toogleTab('departures')}
-                >
-                  Departures
-                </button>
-              </li>
-            </ul>
+            <Nav {...props} />
           </div>
         </div>
       </div>
