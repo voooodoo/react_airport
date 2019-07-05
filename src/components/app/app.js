@@ -102,7 +102,7 @@ class App extends Component {
     }
 
     const content = isLoading ? (
-      <div class="spinner spinner-border text-primary"></div>
+      <div className="spinner spinner-border text-primary"></div>
     ) : (
       <Table data={data} setrSortField={this.setrSortField} />
     );
