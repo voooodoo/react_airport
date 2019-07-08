@@ -2,7 +2,7 @@ import React from 'react';
 import Nav from '../nav';
 import './header.css';
 
-const Header = props => {
+const Header = ({ toogleTab, toogleDay }) => {
   return (
     <header className="header">
       <div className="container">
@@ -13,7 +13,7 @@ const Header = props => {
                 <span className="logo">Airport</span>
               </li>
             </ul>
-            <Nav {...props} />
+            <Nav toogleTab={toogleTab} toogleDay={toogleDay} />
           </div>
         </div>
       </div>

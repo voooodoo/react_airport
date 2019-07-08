@@ -10,6 +10,8 @@ import {
   SORT_ORDER_AIRLINE,
   SORT_ORDER_FLIGHT,
   SORT_ORDER_STATUS,
+  SORT_ORDER_ASCENDING,
+  SORT_ORDER_DESCENDING,
 } from '../../helpers/filter-constants';
 
 import './app.css';
@@ -22,6 +24,7 @@ class App extends Component {
     date: this.getDate(),
     day: DAY_TODAY,
     sortField: null,
+    sortOrder: SORT_ORDER_ASCENDING,
     isLoading: false,
   };
 
@@ -44,32 +47,62 @@ class App extends Component {
           break;
       }
 
-      this.setState({ date: this.getDate(date), day: newDay, sortField: null }, () => this.fetch());
+      this.setState({ date: this.getDate(date), day: newDay, sortField: null }, this.fetch);
     }
   };
 
   setrSortField = sortField => {
     if (this.state.sortField !== sortField) {
       this.setState({ sortField });
+    } else {
+      this.setState(prevState => ({
+        sortOrder: prevState.sortOrder === SORT_ORDER_ASCENDING ? SORT_ORDER_DESCENDING : SORT_ORDER_ASCENDING,
+      }));
     }
   };
 
-  sortData(data, sortField) {
+  sortData(data, sortField, sortOrder) {
+    const orderDestAscending = (a, b) => {
+      const destA = a['airportFromID.city_en'] || a['airportToID.city_en'];
+      const destB = b['airportFromID.city_en'] || b['airportToID.city_en'];
+      return destA.localeCompare(destB);
+    };
+
+    const orderDestDescending = (a, b) => {
+      const destA = a['airportFromID.city_en'] || a['airportToID.city_en'];
+      const destB = b['airportFromID.city_en'] || b['airportToID.city_en'];
+      return destB.localeCompare(destA);
+    };
+
+    const orderAirlineAscending = (a, b) => {
+      const airlineA = a.airline.en.name;
+      const airlineB = b.airline.en.name;
+      return airlineA.localeCompare(airlineB);
+    };
+
+    const orderAirlineDescending = (a, b) => {
+      const airlineA = a.airline.en.name;
+      const airlineB = b.airline.en.name;
+      return airlineB.localeCompare(airlineA);
+    };
+
     const callbackMap = {
-      [SORT_ORDER_TERMINAL]: (a, b) => a.term.localeCompare(b.term),
-      [SORT_ORDER_TIME]: (a, b) => new Date(a.actual) - new Date(b.actual),
-      [SORT_ORDER_DESTINATION]: (a, b) => {
-        const destA = a['airportFromID.city_en'] || a['airportToID.city_en'];
-        const destB = b['airportFromID.city_en'] || b['airportToID.city_en'];
-        return destA.localeCompare(destB);
-      },
-      [SORT_ORDER_AIRLINE]: (a, b) => {
-        const airlineA = a.airline.en.name;
-        const airlineB = b.airline.en.name;
-        return airlineA.localeCompare(airlineB);
-      },
-      [SORT_ORDER_FLIGHT]: (a, b) => a.fltNo - b.fltNo,
-      [SORT_ORDER_STATUS]: (a, b) => a.status.localeCompare(b.status),
+      [SORT_ORDER_TERMINAL]:
+        sortOrder === SORT_ORDER_ASCENDING
+          ? (a, b) => a.term.localeCompare(b.term)
+          : (a, b) => b.term.localeCompare(a.term),
+      [SORT_ORDER_TIME]:
+        sortOrder === SORT_ORDER_ASCENDING
+          ? (a, b) => new Date(a.actual) - new Date(b.actual)
+          : (a, b) => new Date(b.actual) - new Date(a.actual),
+      [SORT_ORDER_DESTINATION]: sortOrder === SORT_ORDER_ASCENDING ? orderDestAscending : orderDestDescending,
+      [SORT_ORDER_AIRLINE]: sortOrder === SORT_ORDER_ASCENDING ? orderAirlineAscending : orderAirlineDescending,
+      [SORT_ORDER_FLIGHT]:
+        sortOrder === SORT_ORDER_ASCENDING ? (a, b) => a.fltNo - b.fltNo : (a, b) => b.fltNo - a.fltNo,
+      [SORT_ORDER_STATUS]:
+        sortOrder === SORT_ORDER_ASCENDING
+          ? (a, b) => a.status.localeCompare(b.status)
+          : (a, b) => b.status.localeCompare(a.status),
     };
 
     const callback = callbackMap[sortField];
@@ -83,8 +116,7 @@ class App extends Component {
 
   fetch() {
     this.setState({ isLoading: true });
-    ApiService.getData(this.state.date).then(data => {
-      const { arrival, departure } = data;
+    ApiService.getData(this.state.date).then(({ arrival, departure }) => {
       this.setState({ arrival, departure, isLoading: false });
     });
   }
@@ -94,11 +126,11 @@ class App extends Component {
   }
 
   render() {
-    const { arrival, departure, tab, date, day, sortField, isLoading } = this.state;
+    const { arrival, departure, tab, date, day, sortField, isLoading, sortOrder } = this.state;
     let data = tab === ARRIVALS ? arrival : departure;
 
     if (sortField) {
-      data = this.sortData(data, sortField);
+      data = this.sortData(data, sortField, sortOrder);
     }
 
     const content = isLoading ? (
