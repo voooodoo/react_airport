@@ -53,7 +53,7 @@ class App extends Component {
 
   setrSortField = sortField => {
     if (this.state.sortField !== sortField) {
-      this.setState({ sortField });
+      this.setState({ sortField, sortOrder: SORT_ORDER_ASCENDING });
     } else {
       this.setState(prevState => ({
         sortOrder: prevState.sortOrder === SORT_ORDER_ASCENDING ? SORT_ORDER_DESCENDING : SORT_ORDER_ASCENDING,
