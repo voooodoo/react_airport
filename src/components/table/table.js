@@ -11,28 +11,28 @@ import {
 
 import './table.css';
 
-const Table = ({ data, setrSortField }) => {
+const Table = ({ data, setSortField }) => {
   return (
     <table className="table">
       <thead>
         <tr>
-          <th scope="col" onClick={() => setrSortField(SORT_ORDER_TERMINAL)}>
+          <th scope="col" onClick={() => setSortField(SORT_ORDER_TERMINAL)}>
             Terminal
           </th>
           <th scope="col">Gate</th>
-          <th scope="col" onClick={() => setrSortField(SORT_ORDER_TIME)}>
+          <th scope="col" onClick={() => setSortField(SORT_ORDER_TIME)}>
             Time
           </th>
-          <th scope="col" onClick={() => setrSortField(SORT_ORDER_DESTINATION)}>
+          <th scope="col" onClick={() => setSortField(SORT_ORDER_DESTINATION)}>
             Destination
           </th>
-          <th scope="col" onClick={() => setrSortField(SORT_ORDER_AIRLINE)}>
+          <th scope="col" onClick={() => setSortField(SORT_ORDER_AIRLINE)}>
             Airline
           </th>
-          <th scope="col" onClick={() => setrSortField(SORT_ORDER_FLIGHT)}>
+          <th scope="col" onClick={() => setSortField(SORT_ORDER_FLIGHT)}>
             Flight #
           </th>
-          <th scope="col" onClick={() => setrSortField(SORT_ORDER_STATUS)}>
+          <th scope="col" onClick={() => setSortField(SORT_ORDER_STATUS)}>
             Status
           </th>
         </tr>
